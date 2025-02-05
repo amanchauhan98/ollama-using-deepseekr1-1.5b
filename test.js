@@ -1,9 +1,11 @@
 
 async function getDataFromOllama(e) {
     e.preventDefault();
+    const searchBtn = document.getElementById("search-btn");
 
     try {
         const searchInput = getValuefromInputSearch()
+        searchBtn.value = "loading..."
         const payload = {
             model: "deepseek-r1:1.5b",
             stream: false,
@@ -27,6 +29,7 @@ async function getDataFromOllama(e) {
 
         if (!response.ok) {
             console.error(`Error: ${response.status} ${response.statusText}`);
+            searchBtn.value = "Error Found"
             return;
         }
 
@@ -41,7 +44,12 @@ async function getDataFromOllama(e) {
         }
 
         // console.log("Full Response:", JSON.parse(result)?.message?.content);
+        searchBtn.value = "Result Found"
+        searchBtn.setAttribute("disabled", true);
         postOllamaResult(JSON.parse(result)?.message?.content);
+        searchBtn.value = "Search"
+        searchBtn.setAttribute("disabled", false);
+
     } catch (error) {
         console.error("something went wrong while fetching data from ollama", error);
     }
